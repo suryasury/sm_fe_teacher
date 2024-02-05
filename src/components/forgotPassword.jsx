@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import { Typography, styled, Container, Link, Box } from "@mui/material";
 import { motion } from "framer-motion";
-import LoginForm from "./loginForm";
 import { useNavigate, Navigate } from "react-router-dom";
-import { loginService } from "../api/api";
+import { forgotPassword } from "../api/api";
 import { useSnackbar } from "notistack";
+import ForgotPasswordForm from "./forgotPasswordForm";
 
 const RootStyle = styled("div")({
   background: "rgb(249, 250, 251)",
@@ -46,18 +46,17 @@ const fadeInUp = {
   },
 };
 
-const Login = () => {
+const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   let isAuthenticated = !!localStorage.getItem("accessToken");
 
-  const handleSubmit = async (email, password) => {
+  const handleSubmit = async (email) => {
     try {
       setLoading(true);
-      let response = await loginService({ email, password });
+      let response = await forgotPassword({ email });
       response = response.data;
-      localStorage.setItem("accessToken", response.data.accessToken);
       enqueueSnackbar(response.message, { variant: "success" });
       setLoading(false);
       navigation("/dashboard");
@@ -101,10 +100,13 @@ const Login = () => {
               sx={{ color: "text.secondary", mb: 5 }}
               style={{ marginBottom: "25px" }}
             >
-              Login to your account
+              Forgot Password
             </Typography>
           </HeadingStyle>
-          <LoginForm handleLoginSubmit={handleSubmit} loading={loading} />
+          <ForgotPasswordForm
+            handleFormSubmit={handleSubmit}
+            loading={loading}
+          />
         </ContentStyle>
       </Container>
     </RootStyle>
@@ -113,4 +115,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;

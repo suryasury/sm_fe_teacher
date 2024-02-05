@@ -8,7 +8,7 @@ const getAuthToken = () => {
 
 export const loginService = async (body) => {
   try {
-    let result = await axios.post(`${apiUrl}/api/parents/login`, body, {
+    let result = await axios.post(`${apiUrl}/api/teachers/login`, body, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export const loginService = async (body) => {
 
 export const getUserDetails = async () => {
   try {
-    let result = await axios.get(`${apiUrl}/api/parents/student/details`, {
+    let result = await axios.get(`${apiUrl}/api/teachers/details`, {
       headers: {
         Authorization: getAuthToken(),
       },
@@ -35,9 +35,9 @@ export const getUserDetails = async () => {
   }
 };
 
-export const getFeeDetails = async () => {
+export const getSections = async () => {
   try {
-    let result = await axios.get(`${apiUrl}/api/parents/fees/details`, {
+    let result = await axios.get(`${apiUrl}/api/teachers/dashboard/sections`, {
       headers: {
         Authorization: getAuthToken(),
       },
@@ -52,8 +52,99 @@ export const getFeeDetails = async () => {
 export const passwordReset = async (body) => {
   try {
     let result = await axios.patch(
-      `${apiUrl}/api/parents/password/reset`,
+      `${apiUrl}/api/teachers/password/reset`,
       body,
+      {
+        headers: {
+          Authorization: getAuthToken(),
+        },
+      }
+    );
+    return result;
+  } catch (err) {
+    console.log("error", err);
+    throw err;
+  }
+};
+
+export const getStudentList = async (sectionId, filters) => {
+  try {
+    let result = await axios.get(
+      `${apiUrl}/api/teachers/sections/students/list/${sectionId}` + filters,
+      {
+        headers: {
+          Authorization: getAuthToken(),
+        },
+      }
+    );
+    return result;
+  } catch (err) {
+    console.log("error", err);
+    throw err;
+  }
+};
+
+export const getSectionDetails = async (sectionId) => {
+  try {
+    let result = await axios.get(
+      `${apiUrl}/api/teachers/section/details/${sectionId}`,
+      {
+        headers: {
+          Authorization: getAuthToken(),
+        },
+      }
+    );
+    return result;
+  } catch (err) {
+    console.log("error", err);
+    throw err;
+  }
+};
+
+export const getStudentDetails = async (studentId) => {
+  try {
+    let result = await axios.get(
+      `${apiUrl}/api/teachers/student/details/${studentId}`,
+      {
+        headers: {
+          Authorization: getAuthToken(),
+        },
+      }
+    );
+    return result;
+  } catch (err) {
+    console.log("error", err);
+    throw err;
+  }
+};
+
+export const forgotPassword = async (email) => {
+  try {
+    let result = await axios.post(
+      `${apiUrl}/api/teachers/forgot-password`,
+      {
+        email,
+      },
+      {
+        headers: {
+          Authorization: getAuthToken(),
+        },
+      }
+    );
+    return result;
+  } catch (err) {
+    console.log("error", err);
+    throw err;
+  }
+};
+
+export const resetPassword = async (password) => {
+  try {
+    let result = await axios.patch(
+      `${apiUrl}/api/teachers/forget-password`,
+      {
+        password,
+      },
       {
         headers: {
           Authorization: getAuthToken(),

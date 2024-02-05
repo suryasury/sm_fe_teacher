@@ -7,15 +7,6 @@ const SnackbarStyled = styled(Snackbar)({
 });
 
 const SnackBar = ({ open, message, severity, onClose }) => {
-  //   const [isOpen, setIsOpen] = useState(open);
-
-  //   const handleClose = (event, reason) => {
-  //     if (reason === "clickaway") {
-  //       return;
-  //     }
-  //     setIsOpen(false);
-  //   };
-
   return (
     <SnackbarStyled
       open={open}

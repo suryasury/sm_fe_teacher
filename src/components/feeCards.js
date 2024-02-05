@@ -7,7 +7,7 @@ const FeeCardStyle = {
   padding: "10px",
   marginTop: "30px",
 };
-const FeeCard = ({ term, dueDate, amount, status, loading, handleClick }) => (
+const FeeCard = ({ term, dueDate, amount, status }) => (
   <Card style={{ ...FeeCardStyle }} key={term}>
     <CardContent>
       <Grid container spacing={2} style={{ marginBottom: "20px" }}>
@@ -49,8 +49,7 @@ const FeeCard = ({ term, dueDate, amount, status, loading, handleClick }) => (
           </Typography>
         </Grid>
       </Grid>
-
-      <Grid container spacing={6}>
+      {/* <Grid container spacing={6}>
         <Grid item lg m sm xl xs>
           <LoadingButton
             onClick={handleClick}
@@ -66,7 +65,7 @@ const FeeCard = ({ term, dueDate, amount, status, loading, handleClick }) => (
             {status ? "Download recipt" : "Pay"}
           </LoadingButton>
         </Grid>
-      </Grid>
+      </Grid> */}
     </CardContent>
   </Card>
 );

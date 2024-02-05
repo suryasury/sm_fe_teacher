@@ -1,16 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form, FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 
-import {
-  Box,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Box, TextField, Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
@@ -25,23 +18,18 @@ const animate = {
   },
 };
 
-const LoginForm = ({ handleLoginSubmit, loading }) => {
-  const [showPassword, setShowPassword] = useState(false);
-
+const ForgotPasswordForm = ({ handleFormSubmit, loading }) => {
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email id").required("Email is required"),
-    password: Yup.string().required("Password is required"),
   });
 
   const formik = useFormik({
     initialValues: {
       email: "",
-      password: "",
-      remember: true,
     },
     validationSchema: LoginSchema,
     onSubmit: (data) => {
-      handleLoginSubmit(data.email, data.password);
+      handleFormSubmit(data.email);
     },
   });
 
@@ -77,30 +65,6 @@ const LoginForm = ({ handleLoginSubmit, loading }) => {
               error={Boolean(touched.email && errors.email)}
               helperText={touched.email && errors.email}
             />
-            <TextField
-              fullWidth
-              autoComplete="current-password"
-              type={showPassword ? "text" : "password"}
-              label="Password"
-              {...getFieldProps("password")}
-              error={Boolean(touched.password && errors.password)}
-              helperText={touched.password && errors.password}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword((prev) => !prev)}
-                    >
-                      {showPassword ? (
-                        <Icon icon="eva:eye-fill" />
-                      ) : (
-                        <Icon icon="eva:eye-off-fill" />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
           </Box>
           <Box
             component={motion.div}
@@ -118,7 +82,7 @@ const LoginForm = ({ handleLoginSubmit, loading }) => {
               }}
               loading={loading}
             >
-              {loading ? "loading..." : "Login"}
+              {loading ? "Sending mail..." : "Get password reset link"}
             </LoadingButton>
           </Box>
           <Box
@@ -126,7 +90,7 @@ const LoginForm = ({ handleLoginSubmit, loading }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={animate}
           >
-            <Link to="/forgot-password" style={{ textDecoration: "none" }}>
+            <Link to="/login" style={{ textDecoration: "none" }}>
               <Button
                 fullWidth
                 size="small"
@@ -140,37 +104,14 @@ const LoginForm = ({ handleLoginSubmit, loading }) => {
                   color: "blue",
                 }}
               >
-                Forgotten password?
+                Login
               </Button>
             </Link>
           </Box>
-          {/* <Box
-            component={motion.div}
-            initial={{ opacity: 0, y: 20 }}
-            animate={animate}
-          >
-            <Link to="/reset-password" style={{ textDecoration: "none" }}>
-              <Button
-                fullWidth
-                size="small"
-                type="submit"
-                variant="contained"
-                style={{
-                  marginBottom: "10px",
-                  outline: "none",
-                  backgroundColor: "white",
-                  boxShadow: "none",
-                  color: "blue",
-                }}
-              >
-                reset password?
-              </Button>
-            </Link>
-          </Box> */}
         </Box>
       </Form>
     </FormikProvider>
   );
 };
 
-export default LoginForm;
+export default ForgotPasswordForm;

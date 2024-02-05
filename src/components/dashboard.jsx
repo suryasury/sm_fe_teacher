@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Typography, Button, styled } from "@mui/material";
 import Header from "./header";
-import { Container } from "@mui/system";
+import {
+  //  Box,
+  Container,
+  // flexbox
+} from "@mui/system";
 import Password from "@mui/icons-material/Password";
 import RenderInfoCard from "./infoCard";
-import FeeCard from "./feeCards";
-import { getFeeDetails, getUserDetails } from "../api/api";
+import { getSections, getUserDetails } from "../api/api";
 import PageLoader from "./pageLoader";
 import { useNavigate } from "react-router-dom";
 import NoDataCard from "./noDataFound";
@@ -22,6 +25,7 @@ const ContainerStyle = {
   justifyContent: "center",
   flexDirection: "column",
   alignItems: "center",
+  width: "100%",
 };
 
 const Dashboard = () => {
@@ -30,8 +34,9 @@ const Dashboard = () => {
   const [buttonLoading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const [userDetails, setUserDetails] = useState({});
-  const [feesDetails, setFeesDetails] = useState([]);
+  const [sectionDetails, setSectionDetails] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const dataFetchInitRef = useRef(false);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -41,9 +46,9 @@ const Dashboard = () => {
         if (userRes?.data?.data) {
           setUserDetails(userRes?.data?.data);
         }
-        let feesRes = await getFeeDetails();
-        if (feesRes?.data?.data) {
-          setFeesDetails(feesRes?.data?.data);
+        let sectionResult = await getSections();
+        if (sectionResult?.data?.data) {
+          setSectionDetails(sectionResult?.data?.data);
         }
         setPageLoading(false);
       } catch (err) {
@@ -51,13 +56,22 @@ const Dashboard = () => {
         enqueueSnackbar(err?.response?.data?.message || err.message, {
           variant: "error",
         });
-        if (err.status === 401) {
+        console.log("login", err.response.status);
+        if (err.response.status === 401) {
           navigate("/login");
+          localStorage.removeItem("accessToken");
         }
       }
     };
-    fetchUserDetails();
+    if (!dataFetchInitRef.current) {
+      dataFetchInitRef.current = true;
+      fetchUserDetails();
+    }
   }, []);
+
+  const handleOnSectionClick = (sectionId) => {
+    navigate(`/student/list/${sectionId}`);
+  };
   return (
     <>
       <Header />
@@ -71,77 +85,66 @@ const Dashboard = () => {
               style={{ marginTop: "30px", ...ContainerStyle }}
             >
               <Typography
-                variant="h3"
+                variant="h4"
                 style={{ opacity: "0.7", fontWeight: "bolder" }}
               >
-                Hi{" "}
-                {userDetails?.father_name || userDetails?.mother_name || "N/A"}
+                Hi {userDetails?.name || "N/A"}
               </Typography>
-              <Button
-                color="inherit"
-                endIcon={<Password />}
-                style={{ margin: "20px", border: "1px solid grey" }}
-                onClick={() => {
-                  setModalOpen(true);
-                }}
-              >
-                Change Password
-              </Button>
-              <RenderInfoCard
-                studentName={userDetails?.name || "N/A"}
-                admissionNumber={userDetails?.admission_number || "N/A"}
-                classAndSection={`${
-                  userDetails?.standard?.standard || "N/A"
-                } - ${userDetails?.standard?.section || "N/A"}`.toUpperCase()}
-              />
-            </Container>
-            <Container
-              maxWidth="sm"
-              style={{
-                width: "100%",
-                padding: "20px",
-                ...ContainerStyle,
-                alignItems: "flex-start",
-              }}
-            >
-              <Typography
-                variant="h4"
-                style={{
-                  opacity: "0.7",
-                  fontWeight: "bold",
-                  textAlign: "left",
-                }}
-              >
-                Fees Payments
-              </Typography>
-
               <div
-                style={{ height: "auto", borderRadius: "10px", width: "100%" }}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                {feesDetails.length > 0 ? (
-                  feesDetails.map((fee) => (
-                    <FeeCard
-                      term={fee.term}
-                      dueDate={fee.due_date}
-                      amount={fee.total_amount}
-                      status={fee.is_paid}
-                      handleClick={() => {
-                        alert("button click");
-                      }}
-                      loading={buttonLoading}
-                    />
-                  ))
+                <Button
+                  color="inherit"
+                  endIcon={<Password />}
+                  style={{
+                    margin: "20px 0px 20px 0px",
+                    border: "1px solid grey",
+                  }}
+                  onClick={() => {
+                    setModalOpen(true);
+                  }}
+                >
+                  Change Password
+                </Button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  gap: 15,
+                  width: "100%",
+                  flexWrap: "wrap",
+                }}
+              >
+                {sectionDetails.length > 0 ? (
+                  sectionDetails.map((section) => {
+                    return (
+                      <RenderInfoCard
+                        section={`${section?.standard?.standard || "NA"} - ${
+                          section?.standard?.section
+                        }`.toUpperCase()}
+                        key={section.standard.id}
+                        sectionId={section.standard.id}
+                        handleClick={handleOnSectionClick}
+                      />
+                    );
+                  })
                 ) : (
                   <NoDataCard />
                 )}
               </div>
-              <ResetPasswordModal
-                open={modalOpen}
-                handleClose={() => {
-                  setModalOpen(false);
-                }}
-              />
             </Container>
+            <ResetPasswordModal
+              open={modalOpen}
+              handleClose={() => {
+                setModalOpen(false);
+              }}
+            />
           </>
         )}
       </RootStyle>

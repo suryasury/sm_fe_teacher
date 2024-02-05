@@ -2,17 +2,10 @@ import React, { useState } from "react";
 import { Form, FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 
-import {
-  Box,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 
 let easing = [0.6, -0.05, 0.01, 0.99];
 const animate = {
@@ -25,23 +18,25 @@ const animate = {
   },
 };
 
-const LoginForm = ({ handleLoginSubmit, loading }) => {
+const ResetPasswordForm = ({ handleFormData, loading }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email id").required("Email is required"),
     password: Yup.string().required("Password is required"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Password must match")
+      .required("Confirm password is required"),
   });
 
   const formik = useFormik({
     initialValues: {
-      email: "",
       password: "",
-      remember: true,
+      confirmPassword: "",
     },
     validationSchema: LoginSchema,
     onSubmit: (data) => {
-      handleLoginSubmit(data.email, data.password);
+      handleFormData(data.password, data.confirmPassword);
     },
   });
 
@@ -70,16 +65,6 @@ const LoginForm = ({ handleLoginSubmit, loading }) => {
           >
             <TextField
               fullWidth
-              autoComplete="username"
-              type="text"
-              label="Email"
-              {...getFieldProps("email")}
-              error={Boolean(touched.email && errors.email)}
-              helperText={touched.email && errors.email}
-            />
-            <TextField
-              fullWidth
-              autoComplete="current-password"
               type={showPassword ? "text" : "password"}
               label="Password"
               {...getFieldProps("password")}
@@ -92,6 +77,29 @@ const LoginForm = ({ handleLoginSubmit, loading }) => {
                       onClick={() => setShowPassword((prev) => !prev)}
                     >
                       {showPassword ? (
+                        <Icon icon="eva:eye-fill" />
+                      ) : (
+                        <Icon icon="eva:eye-off-fill" />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              fullWidth
+              type={showConfirmPassword ? "text" : "password"}
+              label="Confirm password"
+              {...getFieldProps("confirmPassword")}
+              error={Boolean(touched.confirmPassword && errors.confirmPassword)}
+              helperText={touched.confirmPassword && errors.confirmPassword}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    >
+                      {showConfirmPassword ? (
                         <Icon icon="eva:eye-fill" />
                       ) : (
                         <Icon icon="eva:eye-off-fill" />
@@ -118,59 +126,13 @@ const LoginForm = ({ handleLoginSubmit, loading }) => {
               }}
               loading={loading}
             >
-              {loading ? "loading..." : "Login"}
+              {loading ? "Resetting..." : "Reset Password"}
             </LoadingButton>
           </Box>
-          <Box
-            component={motion.div}
-            initial={{ opacity: 0, y: 20 }}
-            animate={animate}
-          >
-            <Link to="/forgot-password" style={{ textDecoration: "none" }}>
-              <Button
-                fullWidth
-                size="small"
-                type="submit"
-                variant="contained"
-                style={{
-                  marginBottom: "10px",
-                  outline: "none",
-                  backgroundColor: "white",
-                  boxShadow: "none",
-                  color: "blue",
-                }}
-              >
-                Forgotten password?
-              </Button>
-            </Link>
-          </Box>
-          {/* <Box
-            component={motion.div}
-            initial={{ opacity: 0, y: 20 }}
-            animate={animate}
-          >
-            <Link to="/reset-password" style={{ textDecoration: "none" }}>
-              <Button
-                fullWidth
-                size="small"
-                type="submit"
-                variant="contained"
-                style={{
-                  marginBottom: "10px",
-                  outline: "none",
-                  backgroundColor: "white",
-                  boxShadow: "none",
-                  color: "blue",
-                }}
-              >
-                reset password?
-              </Button>
-            </Link>
-          </Box> */}
         </Box>
       </Form>
     </FormikProvider>
   );
 };
 
-export default LoginForm;
+export default ResetPasswordForm;

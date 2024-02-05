@@ -6,6 +6,10 @@ import Login from "./components/login";
 import PageNotFound from "./components/pageNotFound";
 import ErrorFallBack from "./components/errorFallBack";
 import { SnackbarProvider } from "notistack";
+import StudentList from "./components/studentList";
+import StudentDetails from "./components/studentDetails";
+import ForgotPassword from "./components/forgotPassword";
+import ResetPassword from "./components/resetPassword";
 
 const App = () => {
   return (
@@ -20,12 +24,20 @@ const App = () => {
             element={<Login />}
             errorElement={<ErrorFallBack />}
           />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route
             path="/"
             element={<PrivateRoute />}
             errorElement={<ErrorFallBack />}
           >
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/student/list/:sectionId" element={<StudentList />} />
+            <Route
+              path="/section/student/details/:studentId"
+              element={<StudentDetails />}
+            />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
