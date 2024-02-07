@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Typography, styled, Container, Link, Box } from "@mui/material";
 import { motion } from "framer-motion";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, useParams } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import ResetPasswordForm from "./resetPasswordForm";
 import { resetPassword } from "../api/api";
@@ -46,20 +46,19 @@ const fadeInUp = {
 };
 
 const ResetPassword = () => {
-  //TODO need to take token from url
+  const { token } = useParams();
   const [loading, setLoading] = useState(false);
   const navigation = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   let isAuthenticated = !!localStorage.getItem("accessToken");
 
-  const handleSubmit = async (password, confirmPassword) => {
+  const handleSubmit = async (password) => {
     try {
       setLoading(true);
-      let response = await resetPassword({ password });
+      let response = await resetPassword(password, token);
       response = response.data;
-      enqueueSnackbar(response.message, { variant: "success" });
       setLoading(false);
-      navigation("/login");
+      navigation("/password/reset/success");
     } catch (err) {
       setLoading(false);
       enqueueSnackbar(err?.response?.data?.message || err.message, {

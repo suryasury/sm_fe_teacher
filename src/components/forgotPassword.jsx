@@ -55,11 +55,13 @@ const ForgotPassword = () => {
   const handleSubmit = async (email) => {
     try {
       setLoading(true);
-      let response = await forgotPassword({ email });
+      let response = await forgotPassword(email);
       response = response.data;
       enqueueSnackbar(response.message, { variant: "success" });
       setLoading(false);
-      navigation("/dashboard");
+      setTimeout(() => {
+        navigation("/login");
+      }, 5000);
     } catch (err) {
       setLoading(false);
       enqueueSnackbar(err?.response?.data?.message || err.message, {

@@ -10,6 +10,7 @@ import StudentList from "./components/studentList";
 import StudentDetails from "./components/studentDetails";
 import ForgotPassword from "./components/forgotPassword";
 import ResetPassword from "./components/resetPassword";
+import PasswordResetSuccessPage from "./components/passwordResetSuccess";
 
 const App = () => {
   return (
@@ -25,7 +26,11 @@ const App = () => {
             errorElement={<ErrorFallBack />}
           />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route
+            path="/password/reset/success"
+            element={<PasswordResetSuccessPage />}
+          />
           <Route
             path="/"
             element={<PrivateRoute />}

@@ -120,17 +120,9 @@ export const getStudentDetails = async (studentId) => {
 
 export const forgotPassword = async (email) => {
   try {
-    let result = await axios.post(
-      `${apiUrl}/api/teachers/forgot-password`,
-      {
-        email,
-      },
-      {
-        headers: {
-          Authorization: getAuthToken(),
-        },
-      }
-    );
+    let result = await axios.post(`${apiUrl}/api/teachers/forgot-password`, {
+      email,
+    });
     return result;
   } catch (err) {
     console.log("error", err);
@@ -138,17 +130,12 @@ export const forgotPassword = async (email) => {
   }
 };
 
-export const resetPassword = async (password) => {
+export const resetPassword = async (password, token) => {
   try {
     let result = await axios.patch(
-      `${apiUrl}/api/teachers/forget-password`,
+      `${apiUrl}/api/teachers/reset-password/${token}`,
       {
         password,
-      },
-      {
-        headers: {
-          Authorization: getAuthToken(),
-        },
       }
     );
     return result;
