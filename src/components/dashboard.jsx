@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Typography, Button, styled } from "@mui/material";
+import { Typography, Button, styled, Grid } from "@mui/material";
 import Header from "./header";
 import {
   //  Box,
@@ -16,16 +16,16 @@ import ResetPasswordModal from "./resetPasswordModal";
 import { useSnackbar } from "notistack";
 
 const RootStyle = styled("div")({
-  display: "grid",
-  placeItems: "center",
+  // display: "grid",
+  // placeItems: "center",
 });
 
 const ContainerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  flexDirection: "column",
-  alignItems: "center",
-  width: "100%",
+  // display: "flex",
+  // justifyContent: "center",
+  // flexDirection: "column",
+  // alignItems: "center",
+  // width: "100%",
 };
 
 const Dashboard = () => {
@@ -59,7 +59,7 @@ const Dashboard = () => {
         console.log("login", err.response.status);
         if (err.response.status === 401) {
           navigate("/login");
-          localStorage.removeItem("accessToken");
+          localStorage.removeItem("teacherAccessToken");
         }
       }
     };
@@ -80,60 +80,51 @@ const Dashboard = () => {
           <PageLoader />
         ) : (
           <>
-            <Container
-              maxWidth="sm"
-              style={{ marginTop: "30px", ...ContainerStyle }}
-            >
+            <Container style={{ marginTop: "30px", ...ContainerStyle }}>
               <Typography
                 variant="h4"
                 style={{ opacity: "0.7", fontWeight: "bolder" }}
               >
                 Hi {userDetails?.name || "N/A"}
               </Typography>
-              <div
+              <Button
+                color="inherit"
+                endIcon={<Password />}
                 style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  margin: "20px 0px 20px 0px",
+                  border: "1px solid grey",
+                }}
+                onClick={() => {
+                  setModalOpen(true);
                 }}
               >
-                <Button
-                  color="inherit"
-                  endIcon={<Password />}
-                  style={{
-                    margin: "20px 0px 20px 0px",
-                    border: "1px solid grey",
-                  }}
-                  onClick={() => {
-                    setModalOpen(true);
-                  }}
-                >
-                  Change Password
-                </Button>
-              </div>
+                Change Password
+              </Button>
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  gap: 15,
-                  width: "100%",
-                  flexWrap: "wrap",
+                  marginTop: "10px",
                 }}
               >
                 {sectionDetails.length > 0 ? (
-                  sectionDetails.map((section) => {
-                    return (
-                      <RenderInfoCard
-                        section={`${section?.standard?.standard || "NA"} - ${
-                          section?.standard?.section
-                        }`.toUpperCase()}
-                        key={section.standard.id}
-                        sectionId={section.standard.id}
-                        handleClick={handleOnSectionClick}
-                      />
-                    );
-                  })
+                  <Grid container spacing={2}>
+                    {sectionDetails.map((section, index) => {
+                      return (
+                        <Grid item xs={12} sm={6} md={4} key={index}>
+                          <RenderInfoCard
+                            section={`${
+                              section?.standard?.standard || "NA"
+                            } - ${section?.standard?.section}`.toUpperCase()}
+                            key={section.standard.id}
+                            sectionId={section.standard.id}
+                            studentsCount={
+                              section?.standard?._count?.students || 0
+                            }
+                            handleClick={handleOnSectionClick}
+                          />
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
                 ) : (
                   <NoDataCard />
                 )}

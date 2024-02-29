@@ -10,6 +10,7 @@ import {
   InputAdornment,
   IconButton,
   TextField,
+  Button,
 } from "@mui/material";
 import Header from "./header";
 import { Box, Container } from "@mui/system";
@@ -21,6 +22,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import StudentCard from "./studentCard";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
+import NoDataCard from "./noDataFound";
 
 const RootStyle = styled("div")({
   display: "grid",
@@ -65,7 +67,7 @@ const StudentList = () => {
       });
       console.log("login", err.response.status);
       if (err.response.status === 401) {
-        localStorage.removeItem("accessToken");
+        localStorage.removeItem("teacherAccessToken");
         navigate("/login");
       }
     }
@@ -126,6 +128,12 @@ const StudentList = () => {
   const handleClearSearch = () => {
     setSearchQuery("");
   };
+
+  const handleClearFilter = () => {
+    setSearchQuery("");
+    setSelectedPaymentStatus("");
+    setSelectedTerm("");
+  };
   return (
     <>
       <Header />
@@ -154,9 +162,9 @@ const StudentList = () => {
                   variant="h6"
                   style={{ opacity: "0.7", fontWeight: "lighter" }}
                 >
-                  {sectionDetails?.section || "NA"} -{" "}
-                  {sectionDetails?.standard || "NA"} (Students count:{" "}
-                  {studentList.length})
+                  {sectionDetails?.standard || "NA"} -{" "}
+                  {sectionDetails?.section || "NA"}
+                  (Students count: {studentList.length})
                 </Typography>
               </div>
               <div
@@ -210,14 +218,21 @@ const StudentList = () => {
                     </Select>
                   </FormControl>
                 </Box>
+                <div>
+                  <Button
+                    style={{ marginLeft: "20px" }}
+                    onClick={handleClearFilter}
+                  >
+                    Clear
+                  </Button>
+                </div>
               </div>
               <TextField
-                label="Admn No / Student name"
+                label="Admn No / Name"
                 variant="outlined"
                 size="small"
                 style={{
-                  maxWidth: "700px",
-                  width: "100%",
+                  width: "350px",
                   marginBottom: "20px",
                 }}
                 value={searchQuery}
@@ -237,17 +252,26 @@ const StudentList = () => {
                   ),
                 }}
               />
-              <Grid container spacing={2}>
-                {studentList.map((student, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
-                    <StudentCard
-                      key={student.id}
-                      student={student}
-                      handleDetailsClick={handleViewDetailsClick}
-                    />
+
+              <div style={{ marginBottom: "50px" }}>
+                {studentList.length > 0 ? (
+                  <Grid container spacing={2}>
+                    {studentList.map((student, index) => (
+                      <Grid item xs={12} sm={6} md={4} key={index}>
+                        <StudentCard
+                          key={student.id}
+                          student={student}
+                          handleDetailsClick={handleViewDetailsClick}
+                        />
+                      </Grid>
+                    ))}
                   </Grid>
-                ))}
-              </Grid>
+                ) : (
+                  <NoDataCard
+                    message={"No students associated in this section"}
+                  />
+                )}
+              </div>
             </Container>
           </>
         )}

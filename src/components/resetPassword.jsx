@@ -50,7 +50,7 @@ const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  let isAuthenticated = !!localStorage.getItem("accessToken");
+  let isAuthenticated = !!localStorage.getItem("teacherAccessToken");
 
   const handleSubmit = async (password) => {
     try {

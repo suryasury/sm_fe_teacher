@@ -1,7 +1,12 @@
 import { Typography, Button } from "@mui/material";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 
-const RenderInfoCard = ({ section, sectionId, handleClick }) => (
+const RenderInfoCard = ({
+  section,
+  sectionId,
+  studentsCount = 0,
+  handleClick,
+}) => (
   <div
     style={{
       backgroundColor: "rgb(249, 250, 251)",
@@ -15,11 +20,15 @@ const RenderInfoCard = ({ section, sectionId, handleClick }) => (
     }}
     key={sectionId}
   >
-    <Typography variant="h6" style={{ opacity: "0.4" }}>
+    <Typography variant="h4" style={{ opacity: "0.6", fontWeight: "bolder" }}>
       {section}
     </Typography>
+    <br />
+    <Typography variant="h6" style={{ opacity: "0.4" }}>
+      Students: {studentsCount}
+    </Typography>
     <Button
-      color="inherit"
+      variant="outlined"
       endIcon={<ReadMoreIcon />}
       onClick={() => {
         console.log("key", sectionId);
@@ -27,10 +36,9 @@ const RenderInfoCard = ({ section, sectionId, handleClick }) => (
       }}
       style={{
         margin: "20px 0px 0px 0px",
-        border: "1px solid grey",
       }}
     >
-      View
+      View Students
     </Button>
   </div>
 );

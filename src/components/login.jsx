@@ -50,14 +50,14 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  let isAuthenticated = !!localStorage.getItem("accessToken");
+  let isAuthenticated = !!localStorage.getItem("teacherAccessToken");
 
   const handleSubmit = async (email, password) => {
     try {
       setLoading(true);
       let response = await loginService({ email, password });
       response = response.data;
-      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("teacherAccessToken", response.data.accessToken);
       enqueueSnackbar(response.message, { variant: "success" });
       setLoading(false);
       navigation("/dashboard");

@@ -38,7 +38,7 @@ const StudentDetails = () => {
       console.log("login", err.response.status);
       if (err.response.status === 401) {
         navigate("/login");
-        localStorage.removeItem("accessToken");
+        localStorage.removeItem("teacherAccessToken");
       }
     }
   };

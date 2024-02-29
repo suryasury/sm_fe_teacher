@@ -50,7 +50,7 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  let isAuthenticated = !!localStorage.getItem("accessToken");
+  let isAuthenticated = !!localStorage.getItem("teacherAccessToken");
 
   const handleSubmit = async (email) => {
     try {

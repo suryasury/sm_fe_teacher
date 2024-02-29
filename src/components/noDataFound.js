@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, Typography } from "@mui/material";
 
-const NoDataCard = () => {
+const NoDataCard = ({ message }) => {
   return (
     <Card
       style={{
@@ -13,11 +13,12 @@ const NoDataCard = () => {
         alignItems: "center",
         display: "flex",
         justifyContent: "center",
+        width: "100%",
       }}
     >
       <CardContent>
         <Typography variant="h6" color="textSecondary" align="center">
-          No fees details found
+          {message || "No fees details found"}
         </Typography>
       </CardContent>
     </Card>
