@@ -99,9 +99,14 @@ const Login = () => {
             </Typography>
             <Typography
               sx={{ color: "text.secondary", mb: 5 }}
-              style={{ marginBottom: "25px" }}
+              style={{
+                marginBottom: "25px",
+                fontWeight: "bolder",
+                opacity: 0.5,
+                fontSize: 20,
+              }}
             >
-              Login to your account
+              Teachers Login
             </Typography>
           </HeadingStyle>
           <LoginForm handleLoginSubmit={handleSubmit} loading={loading} />
